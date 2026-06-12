@@ -238,7 +238,7 @@
 </head>
 <body>
 
-    <audio id="global-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+    <audio id="global-player" src="love.mp3" loop></audio>
 
     <div class="main-container">
         
@@ -271,14 +271,14 @@
 
             <div class="photobooth-wrapper">
                 
-                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
+                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">click a track below to play! ♫</button>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3', this)">5. Inaam</div>
+                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. love 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. departure</div>
+                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. uandme</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -325,16 +325,19 @@
             if (audio.paused) {
                 audio.play()
                     .then(() => { btn.innerHTML = "pause music ⏸"; })
-                    .catch(err => console.log("Playback executed successfully"));
+                    .catch(err => {
+                        console.log(err);
+                        alert("Click anywhere on the page background first, then press play again!");
+                    });
             } else {
                 audio.pause();
                 btn.innerHTML = "play bg music ♫";
             }
         }
 
-        function switchTrack(linkUrl, element) {
+        function switchTrack(fileName, element) {
             audio.pause();
-            audio.setAttribute('src', linkUrl);
+            audio.src = fileName;
             audio.load();
 
             var items = document.getElementsByClassName("track-item");
@@ -347,7 +350,10 @@
             
             audio.play()
                 .then(() => { btn.innerHTML = "pause music ⏸"; })
-                .catch(err => console.log("Stream track active"));
+                .catch(err => {
+                    console.log(err);
+                    btn.innerHTML = "play bg music ♫";
+                });
         }
     </script>
 

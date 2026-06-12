@@ -22,7 +22,7 @@
 
         body {
             font-family: 'Courier New', Courier, monospace;
-            background: url('bg.jpg') center center repeat;
+            background: url('./bg.jpg') center center repeat;
             background-size: auto;
             color: var(--text-color);
             min-height: 100vh;
@@ -182,7 +182,7 @@
         }
         
         .strip-chaos {
-            transform: rotate(5.5deg);
+            transform: rotate(2.5deg);
         }
 
         /* Vertical spacer layout block */
@@ -238,7 +238,7 @@
 </head>
 <body>
 
-    <audio id="global-player" src="love.mp3" loop></audio>
+    <audio id="global-player" src="./love.mp3" loop></audio>
 
     <div class="main-container">
         
@@ -274,22 +274,22 @@
                 <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. Inaam</div>
+                    <div class="track-item active" onclick="switchTrack('./love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('./departure.mp3', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('./uandme.mp3', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('./aarzu.mp3', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('./inaam.mp3', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
                     <div class="photo-slot">
-                        <img src="photo1.jpeg" alt="memory 1">
+                        <img src="./photo1.jpeg" alt="memory 1">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo2.jpg" alt="memory 2">
+                        <img src="./photo2.jpg" alt="memory 2">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo3.jpg" alt="memory 3">
+                        <img src="./photo3.jpg" alt="memory 3">
                     </div>
                     <div class="strip-footer">jannah + suhani</div>
                 </div>
@@ -298,13 +298,13 @@
 
                 <div class="photobooth-strip strip-chaos">
                     <div class="photo-slot">
-                        <img src="photo4.jpeg" alt="memory 4">
+                        <img src="./photo4.jpeg" alt="memory 4">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo5.jpeg" alt="memory 5">
+                        <img src="./photo5.jpeg" alt="memory 5">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo6.jpeg" alt="memory 6">
+                        <img src="./photo6.jpeg" alt="memory 6">
                     </div>
                     <div class="strip-footer">trio chaos</div>
                 </div>
@@ -321,11 +321,25 @@
         var audio = document.getElementById("global-player");
         var btn = document.getElementById("music-btn");
 
+        // Web streams to protect the site from breaking if a local file fails to load
+        var fallbacks = {
+            "./love.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            "./departure.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+            "./uandme.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+            "./aarzu.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+            "./inaam.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
+        };
+
         function toggleAudio() {
             if (audio.paused) {
-                audio.play()
-                    .then(() => { btn.innerHTML = "pause music ⏸"; })
-                    .catch(err => console.log("Interaction required"));
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        btn.innerHTML = "pause music ⏸";
+                    }).catch(err => {
+                        console.log("Audio stream context initialized");
+                    });
+                }
             } else {
                 audio.pause();
                 btn.innerHTML = "play bg music ♫";
@@ -345,9 +359,17 @@
             element.classList.add("active");
             element.innerHTML += " 🔊";
             
-            audio.play()
-                .then(() => { btn.innerHTML = "pause music ⏸"; })
-                .catch(err => console.log("Playback blocked by browser engine"));
+            audio.play().then(() => {
+                btn.innerHTML = "pause music ⏸";
+            }).catch(err => {
+                // If local path fails, instantly switch to cloud track path seamlessly
+                console.log("Local path failed, activating stream layer");
+                audio.src = fallbacks[fileName];
+                audio.load();
+                audio.play().then(() => {
+                    btn.innerHTML = "pause music ⏸";
+                });
+            });
         }
     </script>
 

@@ -322,8 +322,8 @@
                 audio.play().then(() => {
                     playBtn.innerHTML = "pause ⏸";
                 }).catch(err => {
-                    // Graceful UX catch for initial browser auto-play block
-                    alert("Click anywhere on the page background first, then press play again!");
+                    // Replaced the ugly pop-up window with a smooth, clean text hint right on the button!
+                    playBtn.innerHTML = "click background then play!";
                 });
             } else {
                 audio.pause();
@@ -338,7 +338,7 @@
             audio.play().then(() => {
                 playBtn.innerHTML = "pause ⏸";
             }).catch(err => {
-                playBtn.innerHTML = "play ♫";
+                playBtn.innerHTML = "click background then play!";
             });
 
             var items = document.getElementsByClassName("track-item");

@@ -104,37 +104,50 @@
             align-items: center;
         }
 
-        /* Clean textual control toggle button */
-        .audio-toggle {
+        /* Premium Minimalist Custom Player Controls */
+        .player-controls {
+            width: 100%;
+            background-color: var(--card-inner);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .now-playing {
+            font-size: 0.75rem;
+            color: var(--playlist-active);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .audio-btn {
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            color: rgba(255, 255, 255, 0.8);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.75rem;
-            padding: 10px 16px;
+            color: #ffffff;
+            font-family: monospace;
+            font-size: 0.8rem;
+            padding: 6px 14px;
             cursor: pointer;
             transition: all 0.2s ease;
-            text-transform: lowercase;
-            width: 100%;
-            text-align: center;
-            letter-spacing: 0.5px;
-            margin-bottom: 15px;
         }
 
-        .audio-toggle:hover {
-            background-color: #ffffff;
+        .audio-btn:hover {
+            background: #ffffff;
             color: var(--card-inner);
             border-color: #ffffff;
-        }
-
-        /* Hides the video element cleanly out of layout view */
-        .hidden-audio-bridge {
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            position: absolute;
-            pointer-events: none;
-            overflow: hidden;
         }
 
         /* playlist container block */
@@ -186,23 +199,15 @@
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        /* Explicit layout targets for custom rotation slants */
-        .strip-top {
-            transform: rotate(-1.5deg);
-        }
-        
-        .strip-chaos {
-            transform: rotate(5.5deg);
-        }
+        .strip-top { transform: rotate(-1.5deg); }
+        .strip-chaos { transform: rotate(5.5deg); }
 
-        /* Vertical spacer layout block */
         .strip-spacer {
             height: 95px; 
             width: 100%;
             pointer-events: none;
         }
 
-        /* inner image frame slots */
         .photo-slot {
             width: 100%;
             aspect-ratio: 4 / 3; 
@@ -218,9 +223,7 @@
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .photo-slot:hover img {
-            transform: scale(1.12);
-        }
+        .photo-slot:hover img { transform: scale(1.12); }
 
         .strip-footer {
             color: rgba(255, 255, 255, 0.75);
@@ -232,7 +235,6 @@
             text-transform: lowercase;
         }
 
-        /* absolute page footer label */
         .page-footer {
             position: absolute;
             bottom: -45px;
@@ -248,27 +250,19 @@
 </head>
 <body>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <audio id="audio-engine" src="love.mp3" preload="auto"></audio>
 
     <div class="main-container">
-        
         <div class="content-area">
             
             <div class="letter-container">
                 <h1>to suhani.</h1>
-                
                 <p>to my sunuu baby, happy birthday.</p>
-                
                 <p>i still can’t believe we went from literally barely knowing each other last year to being this unhinged every single day. we actually used to just exist in the same room without causing a scene. its wild to think about now. u just make everything so much brighter.</p>
-                
                 <p>we really are the most unhinged gng with ezza, even tho her only job in life is to js bully u. her randomly jumping on you yelling sura mid-class while you’re just trying to exist is soo peak. you genuinely gasp for air like you've seen a ghost. it never gets unfunny. also please stop lying to yourself about arsh. you claim you 'hate' him but we all know you secretly love him. you're never escaping the teasing babe. speaking of teasing, i swear i love the way sreeja maam always targets and teases you so much in class. like she walks into the class and immediately start teasing you b4 you even open ur mouth.</p>
-                
                 <p>you are a true vidhi baalika at the end of the day. but honestly you are also the best artist ever. i love the way you laugh so much that you look like you're about to pass out. plus having the exact same music taste makes everything so much better.</p>
-                
                 <p>even tho you're acting like our digicam photographer & make us take photos in the worst school lighting, v luv ur cam so much. you're still an og 67 fan and my favorite singer. the way you perform better than spotify premium makes me wanna delete my spotify acc. u sing in the most unhinged, broken, funny ways possible.</p>
-                
                 <p>honestly school would be so dead without you and the insane amount of tea you collect. you’re like a walking news channel at this point. nobody does updates like you. you'll literally wander off to the washroom for five minutes and come back with a whole thesis statement on drama that hasn't even happened yet. thanks for always matching my vibe. u're the person i can look at across the classroom and instantly start laughing.</p>
-                
                 <p>i hope you enjoyed ur bday to the fullest. happy birthday suhaniiii !!</p>
 
                 <div class="sign-off-row">
@@ -281,111 +275,72 @@
 
             <div class="photobooth-wrapper">
                 
-                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
+                <div class="player-controls">
+                    <div class="now-playing" id="track-title">now playing: 1. iloveitiloveitiloveit</div>
+                    <div class="control-buttons">
+                        <button class="audio-btn" onclick="togglePlay()" id="play-state-btn">play ♫</button>
+                    </div>
+                </div>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('4D6qatXG5-A', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('25cpx_ThZhg', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('T_UEawa2wCk', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('6hV1jnQssj0', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('-tbgigaf0hM', this)">5. Inaam</div>
-                </div>
-
-                <div class="hidden-audio-bridge">
-                    <div id="yt-player"></div>
+                    <div class="track-item active" onclick="switchTrack('love.mp3', '1. iloveitiloveitiloveit', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.mp3', '2. Departure Lane', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('uandme.mp3', '3. u + me = <3', this)">3. u + me = <3</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.mp3', '4. Aarzu', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.mp3', '5. Inaam', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
-                    <div class="photo-slot">
-                        <img src="photo1.jpeg" alt="memory 1">
-                    </div>
-                    <div class="photo-slot">
-                        <img src="photo2.jpg" alt="memory 2">
-                    </div>
-                    <div class="photo-slot">
-                        <img src="photo3.jpg" alt="memory 3">
-                    </div>
+                    <div class="photo-slot"><img src="photo1.jpeg" alt="memory 1"></div>
+                    <div class="photo-slot"><img src="photo2.jpg" alt="memory 2"></div>
+                    <div class="photo-slot"><img src="photo3.jpg" alt="memory 3"></div>
                     <div class="strip-footer">jannah + suhani</div>
                 </div>
 
                 <div class="strip-spacer"></div>
 
                 <div class="photobooth-strip strip-chaos">
-                    <div class="photo-slot">
-                        <img src="photo4.jpeg" alt="memory 4">
-                    </div>
-                    <div class="photo-slot">
-                        <img src="photo5.jpeg" alt="memory 5">
-                    </div>
-                    <div class="photo-slot">
-                        <img src="photo6.jpeg" alt="memory 6">
-                    </div>
+                    <div class="photo-slot"><img src="photo4.jpeg" alt="memory 4"></div>
+                    <div class="photo-slot"><img src="photo5.jpeg" alt="memory 5"></div>
+                    <div class="photo-slot"><img src="photo6.jpeg" alt="memory 6"></div>
                     <div class="strip-footer">trio chaos</div>
                 </div>
 
             </div>
-
         </div>
 
         <div class="page-footer"> i luv u so much suhaniii // 2026</div>
-
     </div>
 
     <script>
-        var player;
-        var btn = document.getElementById("music-btn");
-        var isPlaying = false;
-        var currentTrackId = '4D6qatXG5-A';
+        var audio = document.getElementById("audio-engine");
+        var playBtn = document.getElementById("play-state-btn");
+        var titleDisplay = document.getElementById("track-title");
 
-        // Fired automatically by the YouTube API script module loading above
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '1',
-                width: '1',
-                videoId: currentTrackId,
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'disablekb': 1,
-                    'fs': 0,
-                    'rel': 0,
-                    'modestbranding': 1
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                btn.innerHTML = "pause music ⏸";
-                isPlaying = true;
-            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
-                btn.innerHTML = "play bg music ♫";
-                isPlaying = false;
-            }
-        }
-
-        function toggleAudio() {
-            if (!player || typeof player.playVideo !== 'function') return;
-            
-            if (!isPlaying) {
-                player.playVideo();
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playBtn.innerHTML = "pause ⏸";
+                }).catch(err => {
+                    // Graceful UX catch for initial browser auto-play block
+                    alert("Click anywhere on the page background first, then press play again!");
+                });
             } else {
-                player.pauseVideo();
+                audio.pause();
+                playBtn.innerHTML = "play ♫";
             }
         }
 
-        function switchTrack(videoSrcId, element) {
-            if (!player || typeof player.loadVideoById !== 'function') return;
+        function switchTrack(fileName, customTitle, element) {
+            audio.src = fileName;
+            titleDisplay.innerHTML = "now playing: " + customTitle;
             
-            currentTrackId = videoSrcId;
-            player.loadVideoById({
-                videoId: videoSrcId,
-                startSeconds: 0
+            audio.play().then(() => {
+                playBtn.innerHTML = "pause ⏸";
+            }).catch(err => {
+                playBtn.innerHTML = "play ♫";
             });
-            
+
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {
                 items[i].classList.remove("active");
@@ -394,6 +349,10 @@
             element.classList.add("active");
             element.innerHTML += " 🔊";
         }
+
+        audio.onended = function() {
+            playBtn.innerHTML = "play ♫";
+        };
     </script>
 
 </body>

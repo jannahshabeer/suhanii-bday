@@ -322,14 +322,11 @@
         var btn = document.getElementById("music-btn");
 
         function toggleAudio() {
-            audio.play()
-                .then(() => { btn.innerHTML = audio.paused ? "play bg music ♫" : "pause music ⏸"; })
-                .catch(err => {
-                    // Smooth fail gracefully without aggressive alert popups
-                    console.log("Interaction required to play");
-                });
-            
-            if (!audio.paused) {
+            if (audio.paused) {
+                audio.play()
+                    .then(() => { btn.innerHTML = "pause music ⏸"; })
+                    .catch(err => console.log("Interaction required"));
+            } else {
                 audio.pause();
                 btn.innerHTML = "play bg music ♫";
             }
@@ -350,7 +347,7 @@
             
             audio.play()
                 .then(() => { btn.innerHTML = "pause music ⏸"; })
-                .catch(err => console.log("Track switched successfully"));
+                .catch(err => console.log("Playback blocked by browser engine"));
         }
     </script>
 

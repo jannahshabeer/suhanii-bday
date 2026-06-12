@@ -34,7 +34,7 @@
             position: relative;
         }
 
-        /* Welcome Gate Overlay */
+        /* Fullscreen Invitation Gate Overlay */
         #unlock-screen {
             position: fixed;
             top: 0;
@@ -147,7 +147,7 @@
             align-items: center;
         }
 
-        /* Control Deck Panel */
+        /* Custom Minimalist Player Control Deck */
         .player-controls {
             width: 100%;
             background-color: var(--card-inner);
@@ -243,7 +243,7 @@
         }
 
         .strip-top { transform: rotate(-1.5deg); }
-        .strip-chaos { transform: rotate(5.5deg); }
+        .strip-chaos { transform: rotate(2.5deg); }
 
         .strip-spacer {
             height: 95px; 
@@ -300,7 +300,7 @@
         </div>
     </div>
 
-    <audio id="audio-engine" src="love.mp3" preload="auto"></audio>
+    <audio id="audio-engine" src="love.MP3" preload="auto"></audio>
 
     <div class="main-container">
         <div class="content-area">
@@ -333,11 +333,11 @@
                 </div>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('love.mp3', '1. iloveitiloveitiloveit', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('departure.mp3', '2. Departure Lane', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('uandme.mp3', '3. u + me = <3', this)">3. u + me = <3</div>
-                    <div class="track-item" onclick="switchTrack('aarzu.mp3', '4. Aarzu', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('inaam.mp3', '5. Inaam', this)">5. Inaam</div>
+                    <div class="track-item active" onclick="switchTrack('love.MP3', '1. iloveitiloveitiloveit', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.MP3', '2. Departure Lane', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('uandme.MP3', '3. u + me = <3', this)">3. u + me = <3</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.MP3', '4. Aarzu', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.MP3', '5. Inaam', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -367,7 +367,6 @@
         var playBtn = document.getElementById("play-state-btn");
         var titleDisplay = document.getElementById("track-title");
 
-        // Fixed! Fades overlay and clears browser context without throwing blocking errors
         function unlockAudioCard() {
             var overlay = document.getElementById("unlock-screen");
             overlay.style.opacity = "0";
@@ -375,7 +374,6 @@
                 overlay.style.visibility = "hidden";
             }, 600);
             
-            // Safe execution catch block that prevents code from freezing up if file is still loading
             var promise = audio.play();
             if (promise !== undefined) {
                 promise.then(() => {

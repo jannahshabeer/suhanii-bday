@@ -104,12 +104,19 @@
             align-items: center;
         }
 
-        /* Unblockable native controller interface styling */
-        .native-audio-bar {
+        /* YouTube Display Frame */
+        .video-box {
             width: 100%;
-            height: 40px;
-            margin-bottom: 20px;
-            outline: none;
+            height: 140px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000;
+        }
+
+        .video-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* playlist container block */
@@ -167,7 +174,7 @@
         }
         
         .strip-chaos {
-            transform: rotate(2.5deg);
+            transform: rotate(5.5deg);
         }
 
         /* Vertical spacer layout block */
@@ -254,14 +261,16 @@
 
             <div class="photobooth-wrapper">
                 
-                <audio id="global-player" class="native-audio-bar" src="love.mp3" controls loop></audio>
+                <div class="video-box">
+                    <iframe id="yt-player" src="https://www.youtube.com/embed/4D6qatXG5-A?enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
+                </div>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. Inaam</div>
+                    <div class="track-item active" onclick="switchTrack('4D6qatXG5-A', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('25cpx_ThZhg', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('T_UEawa2wCk', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('6hV1jnQssj0', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('-tbgigaf0hM', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -283,7 +292,7 @@
                     <div class="photo-slot">
                         <img src="photo4.jpeg" alt="memory 4">
                     </div>
-                    <div class="photo-slot =">
+                    <div class="photo-slot">
                         <img src="photo5.jpeg" alt="memory 5">
                     </div>
                     <div class="photo-slot">
@@ -301,12 +310,10 @@
     </div>
 
     <script>
-        var audio = document.getElementById("global-player");
-
-        function switchTrack(fileName, element) {
-            audio.pause();
-            audio.src = fileName;
-            audio.load();
+        function switchTrack(videoSrcId, element) {
+            var player = document.getElementById("yt-player");
+            // Automatically switches the YouTube track safely
+            player.src = "https://www.youtube.com/embed/" + videoSrcId + "?autoplay=1&enablejsapi=1";
 
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {
@@ -315,9 +322,6 @@
             }
             element.classList.add("active");
             element.innerHTML += " 🔊";
-            
-            // The user must manually click the native play bar arrow to execute
-            console.log("Track source queued: " + fileName);
         }
     </script>
 

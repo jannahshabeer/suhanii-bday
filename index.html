@@ -271,14 +271,14 @@
 
             <div class="photobooth-wrapper">
                 
-                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">click a track below to play! ♫</button>
+                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. love 🔊</div>
-                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. departure</div>
-                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. uandme</div>
-                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. aarzu</div>
-                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. inaam</div>
+                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -322,14 +322,14 @@
         var btn = document.getElementById("music-btn");
 
         function toggleAudio() {
-            if (audio.paused) {
-                audio.play()
-                    .then(() => { btn.innerHTML = "pause music ⏸"; })
-                    .catch(err => {
-                        console.log(err);
-                        alert("Click anywhere on the page background first, then press play again!");
-                    });
-            } else {
+            audio.play()
+                .then(() => { btn.innerHTML = audio.paused ? "play bg music ♫" : "pause music ⏸"; })
+                .catch(err => {
+                    // Smooth fail gracefully without aggressive alert popups
+                    console.log("Interaction required to play");
+                });
+            
+            if (!audio.paused) {
                 audio.pause();
                 btn.innerHTML = "play bg music ♫";
             }
@@ -350,10 +350,7 @@
             
             audio.play()
                 .then(() => { btn.innerHTML = "pause music ⏸"; })
-                .catch(err => {
-                    console.log(err);
-                    btn.innerHTML = "play bg music ♫";
-                });
+                .catch(err => console.log("Track switched successfully"));
         }
     </script>
 

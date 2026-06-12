@@ -34,6 +34,49 @@
             position: relative;
         }
 
+        /* Interactive Browser Unlock Overlay Screen */
+        #unlock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            background: radial-gradient(circle, #190507 0%, #000000 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+        }
+
+        .unlock-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .unlock-title {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .unlock-sub {
+            font-size: 0.85rem;
+            color: var(--playlist-active);
+            letter-spacing: 1px;
+            opacity: 0.8;
+            animation: pulse 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
         /* main container */
         .main-container {
             background-color: var(--card-outer);
@@ -104,7 +147,7 @@
             align-items: center;
         }
 
-        /* Premium Minimalist Custom Player Controls */
+        /* Custom Audio Deck Interface Frame */
         .player-controls {
             width: 100%;
             background-color: var(--card-inner);
@@ -186,7 +229,7 @@
             background: rgba(51, 11, 14, 0.5);
         }
 
-        /* photobooth strip base design */
+        /* photobooth strip layout grids */
         .photobooth-strip {
             background-color: var(--photo-bg);
             padding: 24px 20px 20px 20px;
@@ -249,6 +292,13 @@
     </style>
 </head>
 <body>
+
+    <div id="unlock-screen" onclick="unlockAudioCard()">
+        <div class="unlock-content">
+            <div class="unlock-title">to suhani.</div>
+            <div class="unlock-sub">✉ click to open birthday card</div>
+        </div>
+    </div>
 
     <audio id="audio-engine" src="love.mp3" preload="auto"></audio>
 
@@ -317,13 +367,26 @@
         var playBtn = document.getElementById("play-state-btn");
         var titleDisplay = document.getElementById("track-title");
 
+        // Fades out overlay and tricks browser security to unlock complete audio execution pool immediately
+        function unlockAudioCard() {
+            var overlay = document.getElementById("unlock-screen");
+            overlay.style.opacity = "0";
+            setTimeout(function() {
+                overlay.style.visibility = "hidden";
+            }, 600);
+            
+            // Instantly plays and pauses background system seamlessly to register full device clearance
+            audio.play().then(() => {
+                audio.pause();
+            }).catch(e => console.log("Audio contextualized initialization cleared"));
+        }
+
         function togglePlay() {
             if (audio.paused) {
                 audio.play().then(() => {
                     playBtn.innerHTML = "pause ⏸";
                 }).catch(err => {
-                    // Replaced the ugly pop-up window with a smooth, clean text hint right on the button!
-                    playBtn.innerHTML = "click background then play!";
+                    playBtn.innerHTML = "play ♫";
                 });
             } else {
                 audio.pause();
@@ -338,7 +401,7 @@
             audio.play().then(() => {
                 playBtn.innerHTML = "pause ⏸";
             }).catch(err => {
-                playBtn.innerHTML = "click background then play!";
+                playBtn.innerHTML = "play ♫";
             });
 
             var items = document.getElementsByClassName("track-item");

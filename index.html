@@ -7,11 +7,11 @@
     <style>
         :root {
             --bg-color: #000000;       
-            --card-outer: #330b0e;     /* deep cherry red outer border box */
-            --card-inner: #190507;     /* darker matching cherry red for text box */
-            --text-color: #ffffff;     /* crisp white text */
-            --photo-bg: #0d0405;       /* dark matching backing for the photobooth */
-            --playlist-active: #ffb6c1; /* baby pink active track highlight */
+            --card-outer: #330b0e;     
+            --card-inner: #190507;     
+            --text-color: #ffffff;     
+            --photo-bg: #0d0405;       
+            --playlist-active: #ffb6c1; 
         }
 
         * {
@@ -34,7 +34,7 @@
             position: relative;
         }
 
-        /* Fullscreen Invitation Gate Overlay */
+        /* Welcome Gate Overlay */
         #unlock-screen {
             position: fixed;
             top: 0;
@@ -91,7 +91,6 @@
             position: relative;
         }
 
-        /* content layout split */
         .content-area {
             display: flex;
             width: 100%;
@@ -99,7 +98,6 @@
             align-items: stretch;
         }
 
-        /* letter section */
         .letter-container {
             background-color: var(--card-inner);
             padding: 40px;
@@ -138,7 +136,6 @@
             line-height: 1.6;
         }
 
-        /* photobooth side column */
         .photobooth-wrapper {
             display: flex;
             flex-direction: column;
@@ -147,7 +144,7 @@
             align-items: center;
         }
 
-        /* Custom Minimalist Player Control Deck */
+        /* Custom Player Control Deck */
         .player-controls {
             width: 100%;
             background-color: var(--card-inner);
@@ -229,7 +226,6 @@
             background: rgba(51, 11, 14, 0.5);
         }
 
-        /* photobooth strip base design */
         .photobooth-strip {
             background-color: var(--photo-bg);
             padding: 24px 20px 20px 20px;
@@ -243,7 +239,7 @@
         }
 
         .strip-top { transform: rotate(-1.5deg); }
-        .strip-chaos { transform: rotate(2.5deg); }
+        .strip-chaos { transform: rotate(5.5deg); }
 
         .strip-spacer {
             height: 95px; 
@@ -300,7 +296,7 @@
         </div>
     </div>
 
-    <audio id="audio-engine" src="love.MP3" preload="auto"></audio>
+    <audio id="audio-engine" src="love.mp3" preload="auto"></audio>
 
     <div class="main-container">
         <div class="content-area">
@@ -363,6 +359,7 @@
     </div>
 
     <script>
+        // Clean global DOM assignments
         var audio = document.getElementById("audio-engine");
         var playBtn = document.getElementById("play-state-btn");
         var titleDisplay = document.getElementById("track-title");
@@ -374,23 +371,15 @@
                 overlay.style.visibility = "hidden";
             }, 600);
             
-            var promise = audio.play();
-            if (promise !== undefined) {
-                promise.then(() => {
-                    audio.pause();
-                }).catch(e => {
-                    console.log("Audio pipeline initialized securely.");
-                });
-            }
+            // Simple load call to prepare data safely without triggering unhandled promise exceptions
+            audio.load();
         }
 
         function togglePlay() {
             if (audio.paused) {
-                audio.play().then(() => {
-                    playBtn.innerHTML = "pause ⏸";
-                }).catch(err => {
-                    console.log("Playback error caught smoothly");
-                });
+                // Direct call handles native interaction seamlessly after clicking the entry overlay
+                audio.play();
+                playBtn.innerHTML = "pause ⏸";
             } else {
                 audio.pause();
                 playBtn.innerHTML = "play ♫";
@@ -401,11 +390,8 @@
             audio.src = fileName;
             titleDisplay.innerHTML = "now playing: " + customTitle;
             
-            audio.play().then(() => {
-                playBtn.innerHTML = "pause ⏸";
-            }).catch(err => {
-                playBtn.innerHTML = "play ♫";
-            });
+            audio.play();
+            playBtn.innerHTML = "pause ⏸";
 
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {

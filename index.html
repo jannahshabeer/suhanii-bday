@@ -104,19 +104,36 @@
             align-items: center;
         }
 
-        /* YouTube Display Frame */
-        .video-box {
+        /* Custom clean text toggle button like before */
+        .audio-toggle {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.75rem;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: lowercase;
             width: 100%;
-            height: 140px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: #000;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
         }
 
-        .video-box iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .audio-toggle:hover {
+            background-color: #ffffff;
+            color: var(--card-inner);
+            border-color: #ffffff;
+        }
+
+        /* Hides the actual video interface completely out of view */
+        .hidden-audio-bridge {
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
         }
 
         /* playlist container block */
@@ -230,6 +247,8 @@
 </head>
 <body>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <div class="main-container">
         
         <div class="content-area">
@@ -261,9 +280,7 @@
 
             <div class="photobooth-wrapper">
                 
-                <div class="video-box">
-                    <iframe id="yt-player" src="https://www.youtube.com/embed/4D6qatXG5-A?enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
-                </div>
+                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
                 
                 <div class="playlist-container">
                     <div class="track-item active" onclick="switchTrack('4D6qatXG5-A', this)">1. iloveitiloveitiloveit 🔊</div>
@@ -271,6 +288,10 @@
                     <div class="track-item" onclick="switchTrack('T_UEawa2wCk', this)">3. u + me = &lt;3</div>
                     <div class="track-item" onclick="switchTrack('6hV1jnQssj0', this)">4. Aarzu</div>
                     <div class="track-item" onclick="switchTrack('-tbgigaf0hM', this)">5. Inaam</div>
+                </div>
+
+                <div class="hidden-audio-bridge">
+                    <div id="yt-player"></div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -310,11 +331,58 @@
     </div>
 
     <script>
-        function switchTrack(videoSrcId, element) {
-            var player = document.getElementById("yt-player");
-            // Automatically switches the YouTube track safely
-            player.src = "https://www.youtube.com/embed/" + videoSrcId + "?autoplay=1&enablejsapi=1";
+        var player;
+        var btn = document.getElementById("music-btn");
+        var isPlaying = false;
+        var currentTrackId = '4D6qatXG5-A';
 
+        // Automatically invoked by the YouTube API script tag once fully loaded
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                videoId: currentTrackId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': currentTrackId
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                btn.innerHTML = "pause music ⏸";
+                isPlaying = true;
+            } else {
+                btn.innerHTML = "play bg music ♫";
+                isPlaying = false;
+            }
+        }
+
+        function toggleAudio() {
+            if (!player) return;
+            
+            if (!isPlaying) {
+                player.playVideo();
+            } else {
+                player.pauseVideo();
+            }
+        }
+
+        function switchTrack(videoSrcId, element) {
+            if (!player) return;
+            
+            currentTrackId = videoSrcId;
+            player.loadVideoById({
+                videoId: videoSrcId,
+                startSeconds: 0
+            });
+            
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {
                 items[i].classList.remove("active");

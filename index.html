@@ -263,12 +263,12 @@
             <div class="photobooth-wrapper">
                 
                 <div class="spotify-box">
-                    <iframe id="music-player" src="http://googleusercontent.com/spotify.com/9" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <iframe id="music-player" src="https://open.spotify.com/embed/track/6Zp6uRk1vVw9O79S5kK8Wv?utm_source=generator&theme=01" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 </div>
                 
                 <div class="playlist-container">
                     <div class="track-item active" onclick="switchTrack('76ZWhm6r3rI0VnKskU9mU5', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('44988L07pZtSg6B3gK0O2Mn', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('4988L07pZtSg6B3gK0O2Mn', this)">2. Departure Lane</div>
                     <div class="track-item" onclick="switchTrack('31i9dQZF1DX4WY4r366Cg8', this)">3. u + me = &lt;3</div>
                     <div class="track-item" onclick="switchTrack('2F3p6tU0E8Yf0m36S3gZRE', this)">4. Aarzu</div>
                     <div class="track-item" onclick="switchTrack('4S4K8wO8yOqXn75u2P8VOm', this)">5. Inaam</div>
@@ -313,8 +313,8 @@
     <script>
         function switchTrack(spotifyTrackId, element) {
             var player = document.getElementById("music-player");
-            // Updates the secure embedded player layout flawlessly using real IDs
-            player.src = "https://open.spotify.com/embed/track/6Zp6uRk1vVw9O79S5kK8Wv?utm_source=generator&theme=00" + spotifyTrackId + "?utm_source=generator&theme=0";
+            // Fixed URL format by using /embed/track/ pathing correctly
+            player.src = "https://open.spotify.com/embed/track/6Zp6uRk1vVw9O79S5kK8Wv?utm_source=generator&theme=02" + spotifyTrackId + "?utm_source=generator&theme=0";
 
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {

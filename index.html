@@ -144,50 +144,31 @@
             align-items: center;
         }
 
-        /* Custom Player Control Deck */
+        /* Embedded Dynamic Player Deck */
         .player-controls {
             width: 100%;
             background-color: var(--card-inner);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            padding: 10px;
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        .now-playing {
-            font-size: 0.75rem;
-            color: var(--playlist-active);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .video-frame-container {
             width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .control-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .audio-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-            font-family: monospace;
-            font-size: 0.8rem;
-            padding: 6px 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .audio-btn:hover {
-            background: #ffffff;
-            color: var(--card-inner);
-            border-color: #ffffff;
+        .video-frame-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* playlist container block */
@@ -204,7 +185,7 @@
 
         .track-item {
             font-size: 0.75rem;
-            padding: 6px 10px;
+            padding: 8px 10px;
             color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -296,8 +277,6 @@
         </div>
     </div>
 
-    <audio id="audio-engine" src="love.mp3" preload="auto"></audio>
-
     <div class="main-container">
         <div class="content-area">
             
@@ -322,18 +301,17 @@
             <div class="photobooth-wrapper">
                 
                 <div class="player-controls">
-                    <div class="now-playing" id="track-title">now playing: 1. iloveitiloveitiloveit</div>
-                    <div class="control-buttons">
-                        <button class="audio-btn" onclick="togglePlay()" id="play-state-btn">play ♫</button>
+                    <div class="video-frame-container">
+                        <iframe id="video-engine" src="https://www.youtube.com/embed/n_v7Z9P9_Yk?enablejsapi=1" allow="autoplay; encrypted-media"></iframe>
                     </div>
                 </div>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('love.mp3', '1. iloveitiloveitiloveit', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('departure.mp3', '2. Departure Lane', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('uandme.mp3', '3. u + me = <3', this)">3. u + me = <3</div>
-                    <div class="track-item" onclick="switchTrack('aarzu.mp3', '4. Aarzu', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('inaam.mp3', '5. Inaam', this)">5. Inaam</div>
+                    <div class="track-item" onclick="switchEmbed('https://www.youtube.com/embed/S266jU7r3b8', this)">1. iloveitiloveitiloveit</div>
+                    <div class="track-item" onclick="switchEmbed('https://www.youtube.com/embed/ZzE8N2W-u00', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchEmbed('https://www.youtube.com/embed/Z9Ld9vY898A', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchEmbed('https://www.youtube.com/embed/fD_bV2lRz34', this)">4. Aarzu</div>
+                    <div class="track-item active" onclick="switchEmbed('https://www.youtube.com/embed/n_v7Z9P9_Yk', this)">5. Inaam 🔊</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -359,10 +337,7 @@
     </div>
 
     <script>
-        // Clean global DOM assignments
-        var audio = document.getElementById("audio-engine");
-        var playBtn = document.getElementById("play-state-btn");
-        var titleDisplay = document.getElementById("track-title");
+        var videoDeck = document.getElementById("video-engine");
 
         function unlockAudioCard() {
             var overlay = document.getElementById("unlock-screen");
@@ -371,27 +346,16 @@
                 overlay.style.visibility = "hidden";
             }, 600);
             
-            // Simple load call to prepare data safely without triggering unhandled promise exceptions
-            audio.load();
-        }
-
-        function togglePlay() {
-            if (audio.paused) {
-                // Direct call handles native interaction seamlessly after clicking the entry overlay
-                audio.play();
-                playBtn.innerHTML = "pause ⏸";
-            } else {
-                audio.pause();
-                playBtn.innerHTML = "play ♫";
+            // Append autoplay securely once user registers entry engagement gesture
+            var currentSrc = videoDeck.src;
+            if(!currentSrc.includes("autoplay=1")) {
+                videoDeck.src = currentSrc + "&autoplay=1";
             }
         }
 
-        function switchTrack(fileName, customTitle, element) {
-            audio.src = fileName;
-            titleDisplay.innerHTML = "now playing: " + customTitle;
-            
-            audio.play();
-            playBtn.innerHTML = "pause ⏸";
+        function switchEmbed(embedUrl, element) {
+            // Hot swap source array cleanly with auto-play configurations appended
+            videoDeck.src = embedUrl + "?enablejsapi=1&autoplay=1";
 
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {
@@ -401,10 +365,6 @@
             element.classList.add("active");
             element.innerHTML += " 🔊";
         }
-
-        audio.onended = function() {
-            playBtn.innerHTML = "play ♫";
-        };
     </script>
 
 </body>

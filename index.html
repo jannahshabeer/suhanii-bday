@@ -178,16 +178,16 @@
 
         /* Explicit layout targets for custom rotation slants */
         .strip-top {
-            transform: rotate(-3deg);
+            transform: rotate(-1.5deg);
         }
         
         .strip-chaos {
-            transform: rotate(4deg);
+            transform: rotate(5.5deg);
         }
 
         /* Vertical spacer layout block */
         .strip-spacer {
-            height: 85px;
+            height: 95px; /* Added custom spacing between strips */
             width: 100%;
             pointer-events: none;
         }
@@ -283,7 +283,7 @@
                 
                 <div class="photobooth-strip strip-top">
                     <div class="photo-slot">
-                        <img src="photo1.jpeg" alt="memory 1">
+                        <img src="photo1.jpg" alt="memory 1">
                     </div>
                     <div class="photo-slot">
                         <img src="photo2.jpg" alt="memory 2">
@@ -298,15 +298,15 @@
 
                 <div class="photobooth-strip strip-chaos">
                     <div class="photo-slot">
-                        <img src="photo4.jpeg" alt="memory 4">
+                        <img src="photo4.jpg" alt="memory 4">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo5.jpeg" alt="memory 5">
+                        <img src="photo5.jpg" alt="memory 5">
                     </div>
                     <div class="photo-slot">
-                        <img src="photo6.jpeg" alt="memory 6">
+                        <img src="photo6.jpg" alt="memory 6">
                     </div>
-                    <div class="strip-footer">our chaos</div>
+                    <div class="strip-footer">trio chaos</div>
                 </div>
 
             </div>
@@ -325,7 +325,7 @@
             if (audio.paused) {
                 audio.play()
                     .then(() => { btn.innerHTML = "pause music ⏸"; })
-                    .catch(err => console.log("Playback interaction initiated:", err));
+                    .catch(err => console.log("Audio play gesture forced:", err));
             } else {
                 audio.pause();
                 btn.innerHTML = "play bg music ♫";
@@ -334,7 +334,7 @@
 
         function switchTrack(fileName, element) {
             audio.pause();
-            audio.src = fileName;
+            audio.setAttribute('src', fileName);
             audio.load();
 
             var items = document.getElementsByClassName("track-item");
@@ -347,7 +347,7 @@
             
             audio.play()
                 .then(() => { btn.innerHTML = "pause music ⏸"; })
-                .catch(err => console.log("Live live play state triggered:", err));
+                .catch(err => console.log("Track swap initialized:", err));
         }
     </script>
 

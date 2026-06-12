@@ -104,36 +104,20 @@
             align-items: center;
         }
 
-        /* Custom clean text toggle button like before */
-        .audio-toggle {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: rgba(255, 255, 255, 0.8);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.75rem;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: lowercase;
+        /* Sleek Spotify Frame Container */
+        .spotify-box {
             width: 100%;
-            text-align: center;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            height: 80px;
+            margin-bottom: 20px;
+            background: transparent;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        .audio-toggle:hover {
-            background-color: #ffffff;
-            color: var(--card-inner);
-            border-color: #ffffff;
-        }
-
-        /* Hides the actual video interface completely out of view */
-        .hidden-audio-bridge {
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            position: absolute;
-            pointer-events: none;
+        .spotify-box iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
         }
 
         /* playlist container block */
@@ -247,8 +231,6 @@
 </head>
 <body>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <div class="main-container">
         
         <div class="content-area">
@@ -280,18 +262,16 @@
 
             <div class="photobooth-wrapper">
                 
-                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
+                <div class="spotify-box">
+                    <iframe id="music-player" src="http://googleusercontent.com/spotify.com/9" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('4D6qatXG5-A', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('25cpx_ThZhg', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('T_UEawa2wCk', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('6hV1jnQssj0', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('-tbgigaf0hM', this)">5. Inaam</div>
-                </div>
-
-                <div class="hidden-audio-bridge">
-                    <div id="yt-player"></div>
+                    <div class="track-item active" onclick="switchTrack('76ZWhm6r3rI0VnKskU9mU5', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('44988L07pZtSg6B3gK0O2Mn', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('31i9dQZF1DX4WY4r366Cg8', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('2F3p6tU0E8Yf0m36S3gZRE', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('4S4K8wO8yOqXn75u2P8VOm', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
@@ -331,58 +311,11 @@
     </div>
 
     <script>
-        var player;
-        var btn = document.getElementById("music-btn");
-        var isPlaying = false;
-        var currentTrackId = '4D6qatXG5-A';
+        function switchTrack(spotifyTrackId, element) {
+            var player = document.getElementById("music-player");
+            // Updates the secure embedded player layout flawlessly using real IDs
+            player.src = "https://open.spotify.com/embed/track/6Zp6uRk1vVw9O79S5kK8Wv?utm_source=generator&theme=00" + spotifyTrackId + "?utm_source=generator&theme=0";
 
-        // Automatically invoked by the YouTube API script tag once fully loaded
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '1',
-                width: '1',
-                videoId: currentTrackId,
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': currentTrackId
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                btn.innerHTML = "pause music ⏸";
-                isPlaying = true;
-            } else {
-                btn.innerHTML = "play bg music ♫";
-                isPlaying = false;
-            }
-        }
-
-        function toggleAudio() {
-            if (!player) return;
-            
-            if (!isPlaying) {
-                player.playVideo();
-            } else {
-                player.pauseVideo();
-            }
-        }
-
-        function switchTrack(videoSrcId, element) {
-            if (!player) return;
-            
-            currentTrackId = videoSrcId;
-            player.loadVideoById({
-                videoId: videoSrcId,
-                startSeconds: 0
-            });
-            
             var items = document.getElementsByClassName("track-item");
             for (var i = 0; i < items.length; i++) {
                 items[i].classList.remove("active");

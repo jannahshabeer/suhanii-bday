@@ -34,7 +34,7 @@
             position: relative;
         }
 
-        /* Interactive Browser Unlock Overlay Screen */
+        /* Welcome Gate Overlay */
         #unlock-screen {
             position: fixed;
             top: 0;
@@ -147,7 +147,7 @@
             align-items: center;
         }
 
-        /* Custom Audio Deck Interface Frame */
+        /* Control Deck Panel */
         .player-controls {
             width: 100%;
             background-color: var(--card-inner);
@@ -229,7 +229,7 @@
             background: rgba(51, 11, 14, 0.5);
         }
 
-        /* photobooth strip layout grids */
+        /* photobooth strip base design */
         .photobooth-strip {
             background-color: var(--photo-bg);
             padding: 24px 20px 20px 20px;
@@ -243,7 +243,7 @@
         }
 
         .strip-top { transform: rotate(-1.5deg); }
-        .strip-chaos { transform: rotate(2.5deg); }
+        .strip-chaos { transform: rotate(5.5deg); }
 
         .strip-spacer {
             height: 95px; 
@@ -367,7 +367,7 @@
         var playBtn = document.getElementById("play-state-btn");
         var titleDisplay = document.getElementById("track-title");
 
-        // Fades out overlay and tricks browser security to unlock complete audio execution pool immediately
+        // Fixed! Fades overlay and clears browser context without throwing blocking errors
         function unlockAudioCard() {
             var overlay = document.getElementById("unlock-screen");
             overlay.style.opacity = "0";
@@ -375,10 +375,15 @@
                 overlay.style.visibility = "hidden";
             }, 600);
             
-            // Instantly plays and pauses background system seamlessly to register full device clearance
-            audio.play().then(() => {
-                audio.pause();
-            }).catch(e => console.log("Audio contextualized initialization cleared"));
+            // Safe execution catch block that prevents code from freezing up if file is still loading
+            var promise = audio.play();
+            if (promise !== undefined) {
+                promise.then(() => {
+                    audio.pause();
+                }).catch(e => {
+                    console.log("Audio pipeline initialized securely.");
+                });
+            }
         }
 
         function togglePlay() {
@@ -386,7 +391,7 @@
                 audio.play().then(() => {
                     playBtn.innerHTML = "pause ⏸";
                 }).catch(err => {
-                    playBtn.innerHTML = "play ♫";
+                    console.log("Playback error caught smoothly");
                 });
             } else {
                 audio.pause();

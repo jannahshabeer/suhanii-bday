@@ -22,7 +22,7 @@
 
         body {
             font-family: 'Courier New', Courier, monospace;
-            background: url('./bg.jpg') center center repeat;
+            background: url('bg.jpg') center center repeat;
             background-size: auto;
             color: var(--text-color);
             min-height: 100vh;
@@ -104,27 +104,12 @@
             align-items: center;
         }
 
-        /* music control toggle button */
-        .audio-toggle {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: rgba(255, 255, 255, 0.8);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.75rem;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: lowercase;
+        /* Unblockable native controller interface styling */
+        .native-audio-bar {
             width: 100%;
-            text-align: center;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .audio-toggle:hover {
-            background-color: #ffffff;
-            color: var(--card-inner);
-            border-color: #ffffff;
+            height: 40px;
+            margin-bottom: 20px;
+            outline: none;
         }
 
         /* playlist container block */
@@ -136,7 +121,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 65px;
+            margin-bottom: 45px;
         }
 
         .track-item {
@@ -238,8 +223,6 @@
 </head>
 <body>
 
-    <audio id="global-player" src="./love.mp3" loop></audio>
-
     <div class="main-container">
         
         <div class="content-area">
@@ -271,25 +254,25 @@
 
             <div class="photobooth-wrapper">
                 
-                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
+                <audio id="global-player" class="native-audio-bar" src="love.mp3" controls loop></audio>
                 
                 <div class="playlist-container">
-                    <div class="track-item active" onclick="switchTrack('./love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
-                    <div class="track-item" onclick="switchTrack('./departure.mp3', this)">2. Departure Lane</div>
-                    <div class="track-item" onclick="switchTrack('./uandme.mp3', this)">3. u + me = &lt;3</div>
-                    <div class="track-item" onclick="switchTrack('./aarzu.mp3', this)">4. Aarzu</div>
-                    <div class="track-item" onclick="switchTrack('./inaam.mp3', this)">5. Inaam</div>
+                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. Inaam</div>
                 </div>
                 
                 <div class="photobooth-strip strip-top">
                     <div class="photo-slot">
-                        <img src="./photo1.jpeg" alt="memory 1">
+                        <img src="photo1.jpeg" alt="memory 1">
                     </div>
                     <div class="photo-slot">
-                        <img src="./photo2.jpg" alt="memory 2">
+                        <img src="photo2.jpg" alt="memory 2">
                     </div>
                     <div class="photo-slot">
-                        <img src="./photo3.jpg" alt="memory 3">
+                        <img src="photo3.jpg" alt="memory 3">
                     </div>
                     <div class="strip-footer">jannah + suhani</div>
                 </div>
@@ -298,13 +281,13 @@
 
                 <div class="photobooth-strip strip-chaos">
                     <div class="photo-slot">
-                        <img src="./photo4.jpeg" alt="memory 4">
+                        <img src="photo4.jpeg" alt="memory 4">
+                    </div>
+                    <div class="photo-slot =">
+                        <img src="photo5.jpeg" alt="memory 5">
                     </div>
                     <div class="photo-slot">
-                        <img src="./photo5.jpeg" alt="memory 5">
-                    </div>
-                    <div class="photo-slot">
-                        <img src="./photo6.jpeg" alt="memory 6">
+                        <img src="photo6.jpeg" alt="memory 6">
                     </div>
                     <div class="strip-footer">trio chaos</div>
                 </div>
@@ -319,32 +302,6 @@
 
     <script>
         var audio = document.getElementById("global-player");
-        var btn = document.getElementById("music-btn");
-
-        // Web streams to protect the site from breaking if a local file fails to load
-        var fallbacks = {
-            "./love.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-            "./departure.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-            "./uandme.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-            "./aarzu.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-            "./inaam.mp3": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
-        };
-
-        function toggleAudio() {
-            if (audio.paused) {
-                var playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        btn.innerHTML = "pause music ⏸";
-                    }).catch(err => {
-                        console.log("Audio stream context initialized");
-                    });
-                }
-            } else {
-                audio.pause();
-                btn.innerHTML = "play bg music ♫";
-            }
-        }
 
         function switchTrack(fileName, element) {
             audio.pause();
@@ -359,17 +316,8 @@
             element.classList.add("active");
             element.innerHTML += " 🔊";
             
-            audio.play().then(() => {
-                btn.innerHTML = "pause music ⏸";
-            }).catch(err => {
-                // If local path fails, instantly switch to cloud track path seamlessly
-                console.log("Local path failed, activating stream layer");
-                audio.src = fallbacks[fileName];
-                audio.load();
-                audio.play().then(() => {
-                    btn.innerHTML = "pause music ⏸";
-                });
-            });
+            // The user must manually click the native play bar arrow to execute
+            console.log("Track source queued: " + fileName);
         }
     </script>
 

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>happy birthday tappu</title>
+    <style>
+        :root {
+            --bg-color: #000000;       
+            --card-outer: #330b0e;     /* deep cherry red outer border box */
+            --card-inner: #190507;     /* darker matching cherry red for text box */
+            --text-color: #ffffff;     /* crisp white text */
+            --photo-bg: #0d0405;       /* dark matching backing for the photobooth */
+            --playlist-active: #ffb6c1; /* baby pink active track highlight */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: url('bg.jpg') center center repeat;
+            background-size: auto;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* main container */
+        .main-container {
+            background-color: var(--card-outer);
+            max-width: 850px;
+            width: 100%;
+            padding: 40px;
+            display: flex;
+            gap: 30px;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.85),
+                        0 0 50px rgba(51, 11, 14, 0.4);
+            z-index: 2;
+            position: relative;
+        }
+
+        /* content layout split */
+        .content-area {
+            display: flex;
+            width: 100%;
+            gap: 45px;
+            align-items: stretch;
+        }
+
+        /* letter section */
+        .letter-container {
+            background-color: var(--card-inner);
+            padding: 40px;
+            width: 58%;
+            box-shadow: inset 0 4px 30px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            letter-spacing: -0.1px;
+            word-spacing: -1px;
+        }
+
+        .sign-off-row {
+            display: flex;
+            flex-direction: column;
+            margin-top: auto; 
+            padding-top: 20px;
+        }
+
+        .sign-off {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* photobooth side column */
+        .photobooth-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 42%;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        /* music control toggle button */
+        .audio-toggle {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.75rem;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: lowercase;
+            width: 100%;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .audio-toggle:hover {
+            background-color: #ffffff;
+            color: var(--card-inner);
+            border-color: #ffffff;
+        }
+
+        /* playlist container block */
+        .playlist-container {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 65px;
+        }
+
+        .track-item {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .track-item:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .track-item.active {
+            color: var(--playlist-active);
+            font-weight: bold;
+            border-left-color: var(--playlist-active);
+            background: rgba(51, 11, 14, 0.5);
+        }
+
+        /* photobooth strip base design */
+        .photobooth-strip {
+            background-color: var(--photo-bg);
+            padding: 24px 20px 20px 20px;
+            display: flex !important;
+            flex-direction: column;
+            gap: 20px; 
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* Explicit layout targets for custom rotation slants */
+        .strip-top {
+            transform: rotate(-3deg);
+        }
+        
+        .strip-chaos {
+            transform: rotate(4deg);
+        }
+
+        /* Vertical spacer layout block */
+        .strip-spacer {
+            height: 85px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        /* inner image frame slots */
+        .photo-slot {
+            width: 100%;
+            aspect-ratio: 4 / 3; 
+            overflow: hidden;
+            background-color: #111;
+            display: block !important;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .photo-slot:hover img {
+            transform: scale(1.12);
+        }
+
+        .strip-footer {
+            color: rgba(255, 255, 255, 0.75);
+            font-family: monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+            text-transform: lowercase;
+        }
+
+        /* absolute page footer label */
+        .page-footer {
+            position: absolute;
+            bottom: -45px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="global-player" src="love.mp3" loop></audio>
+
+    <div class="main-container">
+        
+        <div class="content-area">
+            
+            <div class="letter-container">
+                <h1>to suhani.</h1>
+                
+                <p>to my sunuu baby, happy birthday.</p>
+                
+                <p>i still can’t believe we went from literally barely knowing each other last year to being this unhinged every single day. we actually used to just exist in the same room without causing a scene. its wild to think about now. u just make everything so much brighter.</p>
+                
+                <p>we really are the most unhinged gng with ezza, even tho her only job in life is to js bully u. her randomly jumping on you yelling sura mid-class while you’re just trying to exist is soo peak. you genuinely gasp for air like you've seen a ghost. it never gets unfunny. also please stop lying to yourself about arsh. you claim you 'hate' him but we all know you secretly love him. you're never escaping the teasing babe. speaking of teasing, i swear i love the way sreeja maam always targets and teases you so much in class. like she walks into the class and immediately start teasing you b4 you even open ur mouth.</p>
+                
+                <p>you are a true vidhi baalika at the end of the day. but honestly you are also the best artist ever. i love the way you laugh so much that you look like you're about to pass out. plus having the exact same music taste makes everything so much better.</p>
+                
+                <p>even tho you're acting like our digicam photographer & make us take photos in the worst school lighting, v luv ur cam so much. you're still an og 67 fan and my favorite singer. the way you perform better than spotify premium makes me wanna delete my spotify acc. u sing in the most unhinged, broken, funny ways possible.</p>
+                
+                <p>honestly school would be so dead without you and the insane amount of tea you collect. you’re like a walking news channel at this point. nobody does updates like you. you'll literally wander off to the washroom for five minutes and come back with a whole thesis statement on drama that hasn't even happened yet. thanks for always matching my vibe. u're the person i can look at across the classroom and instantly start laughing.</p>
+                
+                <p>i hope you enjoyed ur bday to the fullest. happy birthday suhaniiii !!</p>
+
+                <div class="sign-off-row">
+                    <div class="sign-off">
+                        with all the love,<br>
+                        jannah
+                    </div>
+                </div>
+            </div>
+
+            <div class="photobooth-wrapper">
+                
+                <button class="audio-toggle" id="music-btn" onclick="toggleAudio()">play bg music ♫</button>
+                
+                <div class="playlist-container">
+                    <div class="track-item active" onclick="switchTrack('love.mp3', this)">1. iloveitiloveitiloveit 🔊</div>
+                    <div class="track-item" onclick="switchTrack('departure.mp3', this)">2. Departure Lane</div>
+                    <div class="track-item" onclick="switchTrack('uandme.mp3', this)">3. u + me = &lt;3</div>
+                    <div class="track-item" onclick="switchTrack('aarzu.mp3', this)">4. Aarzu</div>
+                    <div class="track-item" onclick="switchTrack('inaam.mp3', this)">5. Inaam</div>
+                </div>
+                
+                <div class="photobooth-strip strip-top">
+                    <div class="photo-slot">
+                        <img src="photo1.jpeg" alt="memory 1">
+                    </div>
+                    <div class="photo-slot">
+                        <img src="photo2.jpg" alt="memory 2">
+                    </div>
+                    <div class="photo-slot">
+                        <img src="photo3.jpg" alt="memory 3">
+                    </div>
+                    <div class="strip-footer">jannah + suhani</div>
+                </div>
+
+                <div class="strip-spacer"></div>
+
+                <div class="photobooth-strip strip-chaos">
+                    <div class="photo-slot">
+                        <img src="photo4.jpeg" alt="memory 4">
+                    </div>
+                    <div class="photo-slot">
+                        <img src="photo5.jpeg" alt="memory 5">
+                    </div>
+                    <div class="photo-slot">
+                        <img src="photo6.jpeg" alt="memory 6">
+                    </div>
+                    <div class="strip-footer">our chaos</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="page-footer"> i luv u so much suhaniii // 2026</div>
+
+    </div>
+
+    <script>
+        var audio = document.getElementById("global-player");
+        var btn = document.getElementById("music-btn");
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play()
+                    .then(() => { btn.innerHTML = "pause music ⏸"; })
+                    .catch(err => console.log("Playback interaction initiated:", err));
+            } else {
+                audio.pause();
+                btn.innerHTML = "play bg music ♫";
+            }
+        }
+
+        function switchTrack(fileName, element) {
+            audio.pause();
+            audio.src = fileName;
+            audio.load();
+
+            var items = document.getElementsByClassName("track-item");
+            for (var i = 0; i < items.length; i++) {
+                items[i].classList.remove("active");
+                items[i].innerHTML = items[i].innerHTML.replace(" 🔊", "");
+            }
+            element.classList.add("active");
+            element.innerHTML += " 🔊";
+            
+            audio.play()
+                .then(() => { btn.innerHTML = "pause music ⏸"; })
+                .catch(err => console.log("Live live play state triggered:", err));
+        }
+    </script>
+
+</body>
+</html>
